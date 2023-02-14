@@ -252,7 +252,6 @@ export default {
       const mm = this.months[dated.getMonth()];
       const yyy = dated.getFullYear();
       const finalDate = `${dd} ${mm} ${yyy}`;
-      // console.log("day",dated.getDay());
       const day = dated.getDay();
       this.displayDay = this.days[day];
       this.displayDate = finalDate;

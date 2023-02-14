@@ -37,71 +37,14 @@
               >Start time (hh:mm)</label
             >
             <div class="groupElements">
-              <select
-                name="meetingsStartTimeHours"
-                id="meetingsStartTimeHours"
-                class="custom-select"
-                v-model.number="startTimeHr"
-              >
-                <option selected value="0">0</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-                <option value="12">12</option>
-                <option value="13">13</option>
-                <option value="14">14</option>
-                <option value="15">15</option>
-                <option value="16">16</option>
-                <option value="17">17</option>
-                <option value="18">18</option>
-                <option value="19">19</option>
-                <option value="20">20</option>
-                <option value="21">21</option>
-                <option value="22">22</option>
-                <option value="23">23</option>
-                <option value="24">24</option>
-              </select>
-              :
-              <select
-                name="meetingsStartTimeMinutes"
-                id="meetingsStartTimeMinutes"
-                class="custom-select"
-                v-model.number="startTimeMin"
-              >
-                <option selected value="0">0</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-                <option value="12">12</option>
-                <option value="13">13</option>
-                <option value="14">14</option>
-                <option value="15">15</option>
-                <option value="16">16</option>
-                <option value="17">17</option>
-                <option value="18">18</option>
-                <option value="19">19</option>
-                <option value="20">20</option>
-                <option value="21">21</option>
-                <option value="22">22</option>
-                <option value="23">23</option>
-                <option value="24">24</option>
-              </select>
+              <input
+                type="time"
+                id="start-time"
+                name="startTime"
+                class="time-block"
+                v-model="startTime"
+                @change="starttimePassed(startTime)"
+              />
             </div>
           </div>
 
@@ -110,71 +53,14 @@
               >End time (hh:mm)</label
             >
             <div class="groupElements">
-              <select
-                name="meetingsEndTimeHours"
-                id="meetingsEndTimeHours"
-                class="custom-select"
-                v-model.number="endTimeHr"
-              >
-                <option selected value="0">0</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-                <option value="12">12</option>
-                <option value="13">13</option>
-                <option value="14">14</option>
-                <option value="15">15</option>
-                <option value="16">16</option>
-                <option value="17">17</option>
-                <option value="18">18</option>
-                <option value="19">19</option>
-                <option value="20">20</option>
-                <option value="21">21</option>
-                <option value="22">22</option>
-                <option value="23">23</option>
-                <option value="24">24</option>
-              </select>
-              :
-              <select
-                name="meetingsEndTimeMinutes"
-                id="meetingsEndTimeMinutes"
-                class="custom-select"
-                v-model.number="endTimeMin"
-              >
-                <option selected value="0">0</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-                <option value="12">12</option>
-                <option value="13">13</option>
-                <option value="14">14</option>
-                <option value="15">15</option>
-                <option value="16">16</option>
-                <option value="17">17</option>
-                <option value="18">18</option>
-                <option value="19">19</option>
-                <option value="20">20</option>
-                <option value="21">21</option>
-                <option value="22">22</option>
-                <option value="23">23</option>
-                <option value="24">24</option>
-              </select>
+              <input
+                type="time"
+                id="end-time"
+                name="endTime"
+                class="time-block"
+                v-model="endTime"
+                @change="endtimePassed(endTime)"
+              />
             </div>
           </div>
           <div class="form-group">
@@ -230,7 +116,10 @@ export default {
   },
   data() {
     return {
+      context: null,
       meetingDate: null,
+      startTime: null,
+      endTime: null,
       startTimeHr: 0,
       startTimeMin: 0,
       endTimeHr: 0,
@@ -243,6 +132,12 @@ export default {
     };
   },
   methods: {
+    starttimePassed(time) {
+      [this.startTimeHr, this.startTimeMin] = time.split(":");
+    },
+    endtimePassed(time) {
+      [this.endTimeHr, this.endTimeMin] = time.split(":");
+    },
     async addMeeting() {
       const arrayAttendees = this.meetingAttendee.split(",");
       console.log(this.meetingDate);
@@ -284,6 +179,13 @@ export default {
 </script>
 
 <style scoped>
+.time-block {
+  margin: 0px auto;
+  padding: 9px 1%;
+  border: 1px solid rgb(155, 152, 152);
+  border-radius: 8px;
+  margin-top: 8px;
+}
 .title-font-color {
   color: white;
 }
