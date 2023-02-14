@@ -140,7 +140,7 @@ export default {
     },
     async addMeeting() {
       const arrayAttendees = this.meetingAttendee.split(",");
-      console.log(this.meetingDate);
+
       const obj = {
         name: this.meetingName,
         date: this.meetingDate,
@@ -156,11 +156,10 @@ export default {
         attendees: arrayAttendees,
       };
       this.loading = true;
-      console.log(obj);
 
       try {
         const val = await postMeeting(obj);
-        console.log(val);
+
         Vue.$toast.open({
           message: `Meeting '${val.name}' with id=${val._id} was added`,
           type: "success",
