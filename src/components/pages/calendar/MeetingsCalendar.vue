@@ -336,7 +336,7 @@ export default {
 }
 @media only screen and (max-width: 800px) {
   .meeting {
-    left: 65px !important;
+    left: 70px !important;
     right: 20px !important;
   }
 }
