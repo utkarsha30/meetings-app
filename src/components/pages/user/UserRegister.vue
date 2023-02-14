@@ -162,7 +162,7 @@ export default {
       confirmPassShow: false,
       name: null,
       email: null,
-      password: null,
+      password: "",
       confirmPassword: null,
     };
   },
