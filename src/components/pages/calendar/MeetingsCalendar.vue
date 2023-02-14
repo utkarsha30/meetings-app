@@ -290,17 +290,15 @@ export default {
       console.log(dd);
       const m = newDate.getMonth() + 1;
       if (m <= 9) {
-        var mm = `0${d}`;
+        var mm = `0${m}`;
         //  console.log("executed",ddd);
       } else {
         mm = m;
       }
       const yyy = newDate.getFullYear();
       this.select = `${yyy}-${mm}-${dd}`;
-      console.log("Type of Date", typeof this.select);
       this.defaultDateDisplay(newDate);
       this.calendars = await getCalendar(this.select);
-      console.log(this.calendars);
       //  return finalDate;
     },
   },
