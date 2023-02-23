@@ -212,12 +212,10 @@ export default {
       if (this.window.width > 800) {
         const hr = 278 + 60 * calendar.startTime.hours;
         const min = calendar.startTime.minutes * 0.833;
-        console.log("top", hr + min);
         return hr + min;
       } else {
         const hr = 310 + 60 * calendar.startTime.hours;
         const min = calendar.startTime.minutes * 0.833;
-        console.log("top", hr + min);
         return hr + min;
       }
     },
@@ -231,7 +229,6 @@ export default {
         const bottomMin = calendar.endTime.minutes * 0.833;
         const bottomVal = bottomHr + bottomMin;
         const totalHeight = bottomVal - topVal;
-        console.log("Height", totalHeight);
         return totalHeight;
       } else {
         const topHr = 310 + 60 * calendar.startTime.hours;
@@ -241,7 +238,6 @@ export default {
         const bottomMin = calendar.endTime.minutes * 0.833;
         const bottomVal = bottomHr + bottomMin;
         const totalHeight = bottomVal - topVal;
-        console.log("Height", totalHeight);
         return totalHeight;
       }
     },
@@ -276,21 +272,16 @@ export default {
     },
     //on change for right date
     async selectedDate() {
-      console.log(typeof this.select);
-
       let newDate = new Date(this.select);
-      console.log(newDate);
       const d = newDate.getDate();
       if (d <= 9) {
         var dd = `0${d}`;
       } else {
         dd = d;
       }
-      console.log(dd);
       const m = newDate.getMonth() + 1;
       if (m <= 9) {
         var mm = `0${m}`;
-        //  console.log("executed",ddd);
       } else {
         mm = m;
       }

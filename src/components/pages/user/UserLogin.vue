@@ -13,71 +13,66 @@
             type="email"
             v-model.trim="$v.email.$model"
             placeholder="Enter Email"
-            @blur="$v.email.$touch()"
-            :class="{
-              'is-invalid': shouldAppendErrorClass($v.email),
-              'is-valid': shouldAppendValidClass($v.email),
-            }"
+            :class="{ error: $v.email.$error, valid: !$v.email.$invalid }"
           >
           </b-form-input>
-          <div v-if="$v.email.$error">
-            <div v-if="!$v.email.required" class="error-message">
-              <small class="float-left text-danger"
-                >The email field is required</small
-              >
+          <transition name="bounce">
+            <div v-if="$v.email.$error" class="text-left errorMessage">
+              <p v-if="!$v.email.required">Email is Required !</p>
+              <p v-else-if="$v.email.$invalid">Please enter valid Email !</p>
+              <p v-else-if="$v.email.emailValidation">
+                Please enter valid Email !
+              </p>
             </div>
-            <div v-if="!$v.email.email" class="error-message">
-              <small class="float-left text-danger"
-                >Invalid email address</small
-              >
-            </div>
-          </div>
+          </transition>
         </b-form-group>
 
-        <b-form-group class="mb-4">
-          <b-form-input
-            id="userPassword"
-            type="password"
-            v-model.trim="$v.password.$model"
-            placeholder="Enter Password"
-            @blur="$v.password.$touch()"
-            :class="{
-              'is-invalid': shouldAppendErrorClass($v.password),
-              'is-valid': shouldAppendValidClass($v.password),
-            }"
-          ></b-form-input>
-          <div v-if="$v.password.$error">
-            <div v-if="!$v.password.required" class="error-message">
-              <small class="float-left text-danger"
-                >The password field is required</small
+        <b-form-group class="mb-4 mt-4 block-inline">
+          <b-input-group>
+            <b-form-input
+              id="userPassword"
+              :type="show ? 'text' : 'password'"
+              placeholder="Enter Password"
+              v-model.trim="$v.password.$model"
+              :class="{
+                error: $v.password.$error,
+                valid: !$v.password.$invalid,
+              }"
+            ></b-form-input>
+            <template #append>
+              <button
+                class="button icon round-corners px-3"
+                @click.prevent="show = !show"
               >
+                <span class="is-small is-right">
+                  <b-icon
+                    icon="eye-fill"
+                    scale="2"
+                    variant="info"
+                    v-if="show"
+                  ></b-icon>
+                  <b-icon
+                    scale="2"
+                    icon="eye-slash-fill"
+                    variant="info"
+                    v-if="!show"
+                  ></b-icon>
+                </span>
+              </button>
+            </template>
+          </b-input-group>
+          <transition name="bounce">
+            <div v-if="$v.password.$error" class="text-left errorMessage">
+              <p v-if="!$v.password.required">Password is Required !</p>
+              <p v-else-if="!$v.password.minLength">
+                Password should contain 8 Minimum Character !
+              </p>
+              <p v-else-if="!$v.password.passwordValidation">
+                Password must have at least 1 character , 1 digit, 1 special
+                characters, and should be atleast 8 characters in length.
+              </p>
             </div>
-            <div v-if="!$v.password.minLength" class="error-message">
-              <small class="float-left text-danger"
-                >The password must have at least 8 characters</small
-              >
-            </div>
-            <div v-if="!$v.password.containsUppercase" class="error-message">
-              <small class="float-left text-danger"
-                >The password must have at least 1 uppercase character</small
-              >
-            </div>
-            <div v-if="!$v.password.containsLowercase" class="error-message">
-              <small class="float-left text-danger"
-                >The password must have at least 1 lowercase character</small
-              >
-            </div>
-            <div v-if="!$v.password.containsNumber" class="error-message">
-              <small class="float-left text-danger"
-                >The password must have at least 1 digit</small
-              >
-            </div>
-            <div v-if="!$v.password.containsSpecial" class="error-message">
-              <small class="float-left text-danger"
-                >The password must have at least 1 special character</small
-              >
-            </div>
-          </div>
+          </transition>
         </b-form-group>
         <b-form-group class="mb-4">
           <b-button type="submit" class="w-100 signin-btn" variant="primary"
@@ -107,8 +102,12 @@
 
 <script>
 import Vue from "vue";
+import {
+  passwordValidation,
+  emailValidation,
+} from "@/service/patternValidation";
+import { required, email, minLength } from "vuelidate/lib/validators";
 import HourGlassLoading from "../HourGlassLoading.vue";
-import { email, required, minLength } from "vuelidate/lib/validators";
 //import {userLogin} from '@/service/user'
 export default {
   name: "UserLogin",
@@ -117,6 +116,7 @@ export default {
   },
   data() {
     return {
+      show: false,
       email: "",
       password: "",
       loading: false,
@@ -125,29 +125,18 @@ export default {
   },
   validations: {
     email: {
-      email,
       required,
+      email,
+      emailValidation,
     },
     password: {
       required,
       minLength: minLength(8),
-      // https://stackoverflow.com/questions/61176720/how-to-validate-password-with-vuelidate
-      containsUppercase: function (value) {
-        return /[A-Z]/.test(value);
-      },
-      containsLowercase: function (value) {
-        return /[a-z]/.test(value);
-      },
-      containsNumber: function (value) {
-        return /[0-9]/.test(value);
-      },
-      containsSpecial: function (value) {
-        return /[#?!@$%^&*-]/.test(value);
-      },
+      passwordValidation,
     },
   },
   methods: {
-    async onSubmit() {
+    async submitLogin() {
       const loginDetails = {
         email: this.email,
         password: this.password,
@@ -155,12 +144,10 @@ export default {
       this.loading = true;
 
       try {
-        const login = await this.$store.dispatch("userLogin", loginDetails);
-        console.log("Login", login);
-        console.log("type", typeof this.$store.state.auth.message);
+        await this.$store.dispatch("userLogin", loginDetails);
 
         Vue.$toast.open({
-          message: `${this.$store.state.auth.message}`,
+          message: `Welcome ${this.$store.state.auth.name} `,
           type: "success",
           position: "bottom",
         });
@@ -175,17 +162,25 @@ export default {
         this.loading = false;
       }
     },
-    shouldAppendValidClass(field) {
-      return !field.$invalid && field.$model && field.$dirty;
-    },
-    shouldAppendErrorClass(field) {
-      return field.$error;
+    onSubmit() {
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        this.submitStatus = "FAIL";
+      } else {
+        this.submitStatus = "SUCCESS";
+        this.submitLogin();
+      }
     },
   },
 };
 </script>
 
 <style scoped>
+.round-corners {
+  border: 1px solid #ced4da;
+  border-top-right-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+}
 @media only screen and (min-width: 750px) {
   .card {
     width: 60%;
@@ -208,5 +203,36 @@ export default {
   font-weight: bold;
 }
 
-/* for loading  */
+/* validations css */
+.valid {
+  border: 1.5px solid rgb(55, 161, 14);
+  color: rgb(26, 82, 4);
+}
+form div .error {
+  border: 1.5px solid red;
+  color: rgb(247, 10, 10);
+}
+.errorMessage {
+  transition: visibility 0s, opacity 0.5s linear;
+  color: rgb(233, 64, 22);
+  font-size: 0.8em;
+}
+/* animation of validation messages */
+.bounce-enter-active {
+  animation: bounce-in 0.5s;
+}
+.bounce-leave-active {
+  animation: bounce-in 0.7s reverse;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
 </style>

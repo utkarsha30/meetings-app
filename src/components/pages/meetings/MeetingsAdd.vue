@@ -85,7 +85,7 @@
               id="meetingsEmail"
               aria-describedby="emailHelp"
               placeholder="john@example.com, @annual-day, mark@example.com"
-              v-model="meetingAttendee"
+              v-model.trim="meetingAttendee"
             />
             <small id="emailHelp" class="form-text title-font-color"
               >Seperate emailids / short names by commas - team short names
@@ -139,7 +139,11 @@ export default {
       [this.endTimeHr, this.endTimeMin] = time.split(":");
     },
     async addMeeting() {
-      const arrayAttendees = this.meetingAttendee.split(",");
+      const arrayAttendees = this.meetingAttendee
+        .split(",")
+        .map(function (item) {
+          return item.trim();
+        });
 
       const obj = {
         name: this.meetingName,

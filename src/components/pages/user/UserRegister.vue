@@ -16,7 +16,7 @@
           >
           </b-form-input>
           <transition name="bounce">
-            <div v-if="$v.name.$error" class="errorMessage">
+            <div v-if="$v.name.$error" class="text-left errorMessage">
               <p v-if="!$v.name.required">Username is Required !</p>
             </div>
           </transition>
@@ -33,7 +33,7 @@
             :class="{ error: $v.email.$error, valid: !$v.email.$invalid }"
           ></b-form-input>
           <transition name="bounce">
-            <div v-if="$v.email.$error" class="errorMessage">
+            <div v-if="$v.email.$error" class="text-left errorMessage">
               <p v-if="!$v.email.required">Email is Required !</p>
               <p v-else-if="$v.email.$invalid">Please enter valid Email !</p>
               <p v-else-if="$v.email.emailValidation">
@@ -77,7 +77,7 @@
             </template>
           </b-input-group>
           <transition name="bounce">
-            <div v-if="$v.password.$error" class="errorMessage">
+            <div v-if="$v.password.$error" class="text-left errorMessage">
               <p v-if="!$v.password.required">Password is Required !</p>
               <p v-else-if="!$v.password.minLength">
                 Password should contain 8 Minimum Character !
@@ -124,7 +124,10 @@
             </template>
           </b-input-group>
           <transition name="bounce">
-            <div v-if="$v.confirmPassword.$error" class="errorMessage">
+            <div
+              v-if="$v.confirmPassword.$error"
+              class="text-left errorMessage"
+            >
               <p v-if="!$v.confirmPassword.sameAsPassword">
                 Password must be identical.
               </p>
@@ -194,11 +197,9 @@ export default {
         password: this.password,
       };
       try {
-        console.log(newDetails);
         const newUser = await registerNewUser(newDetails);
-        console.log(newUser);
         Vue.$toast.open({
-          message: `Congratulations new user is registered!`,
+          message: `Congratulations account for ${newUser.name} is registered!`,
           type: "success",
           position: "bottom",
         });
