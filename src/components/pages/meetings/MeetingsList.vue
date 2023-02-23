@@ -98,8 +98,9 @@ export default {
         this.loading = false;
       }
     },
-    async updateMeetings(index) {
+    async updateMeetings(meeting, index) {
       // const index = this.meetings.indexOf(meeting._id);
+      console.log(index);
       this.meetings.splice(index, 1);
     },
   },
