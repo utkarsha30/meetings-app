@@ -163,11 +163,21 @@ export default {
 
       try {
         const val = await postMeeting(obj);
-
-        Vue.$toast.open({
-          message: `Meeting '${val.name}' with id=${val._id} was added`,
-          type: "success",
-        });
+        if (val) {
+          Vue.$toast.open({
+            message: `Meeting '${val.name}' with id=${val._id} was added`,
+            type: "success",
+          });
+          this.meetingName = null;
+          this.meetingDate = null;
+          this.meetingDescription = null;
+          this.meetingAttendee = null;
+        } else {
+          Vue.$toast.open({
+            message: "Unsuccessful add attempt",
+            type: "error",
+          });
+        }
       } catch (error) {
         Vue.$toast.open({
           message: error.message,

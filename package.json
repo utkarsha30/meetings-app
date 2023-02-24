@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "author":"Utkarsha Kshirsagar",
+  "description": "Frontend for Meetings App",
   "scripts": {
     "start": "npm run serve",
     "serve": "vue-cli-service serve",
