@@ -24,7 +24,7 @@ To run this project locally, follow these steps:
 
 1. Prerequisites
  Node.js and npm installed
- Angular CLI installed
+ Vue 2 installed
  MongoDB instance running
 2. Clone the Repository
    ```sh
